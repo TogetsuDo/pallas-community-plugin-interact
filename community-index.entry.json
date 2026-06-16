@@ -1,0 +1,11 @@
+{
+  "id": "niuniu_interact",
+  "name": "牛牛互动",
+  "description": "名片点赞、戳一戳回图与群主设置专属头衔。社区插件开发示范。",
+  "repository": "https://github.com/TogetsuDo/pallas-community-plugin-niuniu-interact.git",
+  "ref": "main",
+  "author": "TogetsuDo",
+  "homepage": "https://github.com/TogetsuDo/pallas-community-plugin-niuniu-interact",
+  "tags": ["示范", "社交", "工具"],
+  "min_pallas_version": "4.0.0"
+}

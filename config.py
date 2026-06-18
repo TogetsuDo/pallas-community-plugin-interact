@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from src.console.webui import install_hot_reload_config
+from pallas.api.config import install_hot_reload_config
 
 
 class Config(BaseModel, extra="ignore"):
@@ -13,7 +13,7 @@ class Config(BaseModel, extra="ignore"):
     )
     poke_image_dir: str = Field(
         default="",
-        description="戳一戳回复图片目录；留空使用 data/niuniu_interact/poke_images/。",
+        description="戳一戳回复图片目录；留空使用 `data/interact/poke_images/`。",
     )
     poke_fallback_resource_subdir: str = Field(
         default="image/ginko",

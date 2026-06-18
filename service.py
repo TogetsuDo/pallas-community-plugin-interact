@@ -2,16 +2,19 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from nonebot import logger
-from nonebot.adapters import Bot
 from nonebot.exception import ActionFailed
 
-from src.foundation.paths import plugin_data_dir, resource_dir
+from pallas.api.paths import plugin_data_dir, resource_dir
 
 from .config import get_config
 
-PLUGIN_ID = "niuniu_interact"
+if TYPE_CHECKING:
+    from nonebot.adapters import Bot
+
+PLUGIN_ID = "interact"
 
 _IMAGE_GLOBS = (
     "*.[jJ][pP][gG]",

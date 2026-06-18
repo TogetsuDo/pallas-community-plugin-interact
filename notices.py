@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from nonebot import on_message, on_notice
-from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import Event, GroupMessageEvent, PokeNotifyEvent
 from nonebot.permission import SUPERUSER
 from nonebot.rule import Rule
-from nonebot.typing import T_State
 
-from src.features.cmd_perm import group_message_permission_for_command
+from pallas.api.perm import group_message_permission_for_command
 
 from .handlers import handle_poke_reply, handle_set_special_title
+
+if TYPE_CHECKING:
+    from nonebot.adapters import Bot
+    from nonebot.typing import T_State
 
 
 def poke_target_is_self(event: PokeNotifyEvent) -> bool:
@@ -32,19 +36,19 @@ set_special_title_msg = on_message(
     rule=Rule(is_set_special_title_msg),
     priority=5,
     block=True,
-    permission=group_message_permission_for_command("niuniu_interact.set_title") | SUPERUSER,
+    permission=group_message_permission_for_command("interact.set_title") | SUPERUSER,
 )
 
 
 @set_special_title_msg.handle()
 async def on_set_special_title(bot: Bot, event: GroupMessageEvent) -> None:
-    from src.features.plugin_sdk import PluginHandlerContext
+    from pallas.api.commands import PluginHandlerContext
 
     ctx = PluginHandlerContext(
         bot=bot,
         event=event,
-        command_id="niuniu_interact.set_title",
+        command_id="interact.set_title",
         matcher=set_special_title_msg,
-        plugin_tag="niuniu_interact",
+        plugin_tag="interact",
     )
     await handle_set_special_title(ctx)

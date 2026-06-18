@@ -1,22 +1,26 @@
 from nonebot.plugin import PluginMetadata
 
-from src.features.cmd_perm.metadata_defaults import (
-    PLUGIN_EXTRA_VERSION,
-    PLUGIN_HOMEPAGE,
-    PLUGIN_MENU_TEMPLATE,
-)
-from src.features.cmd_perm.metadata_text import SCENE_AUTO, SCENE_BOTH, SCENE_GROUP, join_usage, usage_line
-from src.features.plugin_sdk import (
+from pallas.api.commands import (
     bind_alias_handlers,
     command_perm_list,
     command_perm_row,
     message_command,
 )
+from pallas.api.metadata import (
+    PLUGIN_EXTRA_VERSION,
+    PLUGIN_HOMEPAGE,
+    PLUGIN_MENU_TEMPLATE,
+    SCENE_AUTO,
+    SCENE_BOTH,
+    SCENE_GROUP,
+    join_usage,
+    usage_line,
+)
 
 from . import notices as _notices  # noqa: F401
 from .handlers import handle_praise
 
-PLUGIN_ID = "niuniu_interact"
+PLUGIN_ID = "interact"
 
 __plugin_meta__ = PluginMetadata(
     name="牛牛互动",
@@ -60,7 +64,7 @@ __plugin_meta__ = PluginMetadata(
                 "trigger_scene": SCENE_AUTO,
                 "trigger_condition": "群内戳牛牛",
                 "brief_des": "随机回复图片",
-                "detail_des": "需在插件配置中启用并填写群号；图片放 data/niuniu_interact/poke_images/。",
+                "detail_des": "需在插件配置中启用并填写群号；图片放 `data/interact/poke_images/`。",
             },
         ],
     },

@@ -2,16 +2,19 @@ from __future__ import annotations
 
 import asyncio
 from random import choice
+from typing import TYPE_CHECKING
 
 from nonebot import logger
-from nonebot.adapters import Bot
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, PokeNotifyEvent
 from nonebot.exception import ActionFailed
 
-from src.features.plugin_sdk import PluginHandlerContext
-
 from .config import get_config
 from .service import poke_image_candidates, schedule_user_likes
+
+if TYPE_CHECKING:
+    from nonebot.adapters import Bot
+
+    from pallas.api.commands import PluginHandlerContext
 
 
 async def handle_praise(ctx: PluginHandlerContext) -> None:

@@ -1,67 +1,88 @@
-# 牛牛互动（`niuniu_interact`）
+<p align="center">
+  <img src="./assets/brand-avatar.png" width="220" height="220" alt="牛牛互动">
+</p>
 
-Pallas-Bot **社区插件示范**：名片点赞、戳一戳回图、群主设置专属头衔。
+<h1 align="center">牛牛互动 interact</h1>
 
-本仓库为 **NoneBot 插件包根目录**（含 `__init__.py`），安装后位于 Bot 的 `local/plugins/niuniu_interact/`。
+<p align="center">名片点赞、戳一戳回图与群头衔互动示范插件。</p>
 
-## 功能
+<p align="center">
+  <img alt="社区插件" src="https://img.shields.io/badge/%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6-4B5563">
+  <img alt="示范插件" src="https://img.shields.io/badge/%E7%A4%BA%E8%8C%83%E6%8F%92%E4%BB%B6-4EA94B">
+</p>
 
-| 触发 | 场景 | 说明 |
-| --- | --- | --- |
-| 牛牛赞我 / 赞我 / 牛牛点赞 | 群聊、私聊 | 后台调用 `send_like` 点赞 |
-| 戳牛牛 | 群通知 | 在配置的群内随机回复图片（默认关闭） |
-| `/群头衔@成员 头衔` | 群内 | 群主牛牛设置专属头衔 |
+## 安装方式
 
-## 安装
+可在控制台插件商店安装，也可按社区插件目录放入 `local/plugins/interact/`。
 
-### 插件商店（推荐）
+## 怎么使用
 
-1. 确保 Bot ≥ 4.0，且 `config/pallas.toml` 含 `extra_plugin_dirs = ["local/plugins"]`
-2. 控制台 → **插件商店 → 社区插件** → 安装 **牛牛互动**
-3. 重启 Bot
+- `牛牛赞我`、`赞我`、`牛牛点赞`：让牛牛给你点名片赞。
+- `/群头衔@成员 头衔` 或 `/群头衔 头衔`：给指定成员或自己设置群专属头衔。
+- 群内戳一戳牛牛：在已启用的群里随机回一张图。
 
-### 手工 clone
-
-```bash
-git clone --depth 1 https://github.com/TogetsuDo/pallas-community-plugin-niuniu-interact.git local/plugins/niuniu_interact
-```
-
-## 配置（WebUI → 插件）
-
-| 键 | 默认 | 说明 |
-| --- | --- | --- |
-| enable_like | true | 是否响应赞我口令 |
-| like_times | 10 | 每次点赞次数（1–50） |
-| enable_poke_reply | false | 戳一戳是否回图 |
-| poke_group_ids | [] | 启用回图的群号列表 |
-| poke_image_dir | （空） | 自定义图片目录；默认 `data/niuniu_interact/poke_images/` |
-| poke_fallback_resource_subdir | image/ginko | 插件目录无图时尝试 `resource/` 子路径 |
-| enable_special_title | true | 是否启用 `/群头衔` |
-
-戳一戳图片：将 jpg/png/webp 等放入 `data/niuniu_interact/poke_images/`，并在配置中填写群号。
+> 详细用法、限制条件和可用范围以帮助为主。
 
 ## 命令权限
 
-| 命令 ID | 默认等级 |
+| 功能 | 默认权限 |
 | --- | --- |
-| `niuniu_interact.praise` | everyone |
-| `niuniu_interact.set_title` | group_moderator |
+| `牛牛赞我` | 所有人 |
+| `/群头衔` | 群管/群主 |
 
-## 依赖
+补充条件：
 
-- 运行于 [Pallas-Bot](https://github.com/PallasBot/Pallas-Bot) ≥ 4.0（使用 `plugin_sdk`、WebUI 热重载）
-- OneBot V11 协议端
-- 名片点赞需牛牛与目标用户为 **QQ 好友**
+- `牛牛赞我` 需要牛牛和目标用户已经互为好友。
+- `/群头衔` 只有当处理消息的牛牛本身是该群群主时才会真正生效。
 
-## 与 Cookbook「牛牛赞我」的区别
+## 配置项
 
-主仓 [Cookbook · praise_me](https://github.com/PallasBot/Pallas-Bot/blob/dev/docs/develop/plugin/cookbook.md) 演示 **群内计数赞榜**（`GroupPluginStorage`）。  
-本插件调用 **QQ 原生点赞 API**，并含戳一戳、群头衔等站点向功能，适合作为 **社区插件上架范例**。
+> 可在控制台对应插件页中修改。
 
-## 收录索引
+常用配置：
 
-条目见 [PallasBot/community-plugin-index](https://github.com/PallasBot/community-plugin-index) 的 `index.json`。
+| 配置项 | 说明 |
+| --- | --- |
+| `enable_like` | 是否响应点赞口令 |
+| `like_times` | 每次口令触发的点赞次数 |
+| `enable_poke_reply` | 是否启用戳一戳回图 |
+| `poke_group_ids` | 允许戳一戳回图的群号列表 |
+| `poke_image_dir` | 自定义回图目录 |
+| `poke_fallback_resource_subdir` | 自定义目录为空时的资源回退路径 |
+| `enable_special_title` | 是否启用 `/群头衔` |
 
-## 许可
+## 排障
 
-AGPL-3.0（与 Pallas-Bot 一致）
+| 现象 | 处理 |
+| --- | --- |
+| `牛牛赞我` 没反应 | 检查 `enable_like` 是否开启，以及牛牛是否和目标用户互为好友。 |
+| 戳一戳没有回图 | 检查 `enable_poke_reply`、`poke_group_ids` 和图片目录里是否真的有图。 |
+| `/群头衔` 执行了但没改成功 | 这个功能要求牛牛自己是该群群主，不是群管理员。 |
+| 回图提示没找到图片文件 | 补充 `poke_image_dir`，或确认 `resource/` 下的回退目录里存在图片。 |
+
+## 实现
+
+源码位置：
+
+- 插件入口：[`__init__.py`](./__init__.py)
+- 配置定义：[`config.py`](./config.py)
+- 命令与通知处理：[`handlers.py`](./handlers.py)、[`notices.py`](./notices.py)
+- 点赞与图片目录逻辑：[`service.py`](./service.py)
+
+关键文件：
+
+- [`__init__.py`](./__init__.py)：注册插件元数据、点赞口令和帮助菜单条目。
+- [`handlers.py`](./handlers.py)：实现点赞、戳一戳回图、群头衔设置三类核心行为。
+- [`notices.py`](./notices.py)：挂载戳一戳通知与 `/群头衔` 消息规则。
+- [`service.py`](./service.py)：负责点赞调用、图片目录解析和图片候选收集。
+
+实现要点：
+
+- 点赞功能通过 OneBot `send_like` 异步调用 QQ 名片点赞接口。
+- 戳一戳回图只在配置允许的群内触发，并且会先查自定义图片目录，再回退到 `resource/` 里的默认素材目录。
+- `/群头衔` 不直接写死权限文案，真正执行时还会额外检查牛牛自己是否是群主。
+
+## 相关链接
+
+- [社区插件索引](https://github.com/PallasBot/Pallas-Bot-Community-Plugin-Index)
+- [社区插件商店说明](https://github.com/PallasBot/Pallas-Bot/blob/dev/docs/guide/community-plugin-store.md)

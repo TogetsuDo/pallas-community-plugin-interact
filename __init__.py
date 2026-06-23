@@ -16,6 +16,7 @@ from pallas.api.metadata import (
     join_usage,
     usage_line,
 )
+from pallas.product.llm.knowledge.declare import knowledge_source_row
 
 from . import notices as _notices  # noqa: F401
 from .handlers import handle_praise
@@ -66,6 +67,39 @@ __plugin_meta__ = PluginMetadata(
                 "brief_des": "随机回复图片",
                 "detail_des": "需在插件配置中启用并填写群号；图片放 `data/interact/poke_images/`。",
             },
+        ],
+        "knowledge_sources": [
+            knowledge_source_row(
+                source_id="interact.faq",
+                title="牛牛互动说明",
+                description="名片点赞、戳一戳与群头衔",
+                chunks=[
+                    {
+                        "title": "名片点赞",
+                        "content": (
+                            "发送「牛牛赞我」「赞我」或「牛牛点赞」"
+                            "可为发送者 QQ 名片点赞；须牛牛与发送者为好友。"
+                        ),
+                        "keywords": "赞我,点赞,名片,牛牛赞我",
+                    },
+                    {
+                        "title": "设置群头衔",
+                        "content": (
+                            "群内发送「/群头衔@某人 头衔」或「/群头衔 头衔」设置专属头衔；"
+                            "仅当牛牛为该群群主且发送者为群管或群主时生效。"
+                        ),
+                        "keywords": "群头衔,头衔,专属,设置",
+                    },
+                    {
+                        "title": "戳一戳回图",
+                        "content": (
+                            "在群内戳牛牛可能随机回复图片；"
+                            "需在插件配置中启用并填写群号，图片目录为 data/interact/poke_images/。"
+                        ),
+                        "keywords": "戳一戳,回图,戳牛牛,图片",
+                    },
+                ],
+            ),
         ],
     },
 )

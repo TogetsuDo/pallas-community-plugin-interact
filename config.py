@@ -16,8 +16,8 @@ class Config(BaseModel, extra="ignore"):
         description="戳一戳回复图片目录；留空使用 `data/interact/poke_images/`。",
     )
     poke_fallback_resource_subdir: str = Field(
-        default="image/ginko",
-        description="插件图片目录为空时，尝试 resource/ 下该相对路径。",
+        default="",
+        description="插件图片目录为空时，尝试 resource/ 下该相对路径；留空则不回退。",
     )
     enable_special_title: bool = Field(default=True, description="是否启用 /群头衔 设置专属头衔。")
 

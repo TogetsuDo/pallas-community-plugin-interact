@@ -14,9 +14,9 @@ from pallas.api.metadata import (
     SCENE_BOTH,
     SCENE_GROUP,
     join_usage,
+    knowledge_source_row,
     usage_line,
 )
-from pallas.product.llm.knowledge.declare import knowledge_source_row
 
 from . import notices as _notices  # noqa: F401
 from .handlers import handle_praise

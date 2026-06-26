@@ -49,7 +49,7 @@
 | `enable_poke_reply` | 是否启用戳一戳回图 |
 | `poke_group_ids` | 允许戳一戳回图的群号列表 |
 | `poke_image_dir` | 自定义回图目录 |
-| `poke_fallback_resource_subdir` | 自定义目录为空时的资源回退路径 |
+| `poke_fallback_resource_subdir` | 自定义目录为空时的资源回退路径，默认留空（不回退） |
 | `enable_special_title` | 是否启用 `/群头衔` |
 
 ## 排障

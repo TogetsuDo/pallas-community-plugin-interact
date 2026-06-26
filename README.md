@@ -9,6 +9,7 @@
 <p align="center">
   <img alt="社区插件" src="https://img.shields.io/badge/%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6-4B5563">
   <img alt="示范插件" src="https://img.shields.io/badge/%E7%A4%BA%E8%8C%83%E6%8F%92%E4%BB%B6-4EA94B">
+  <img alt="版本" src="https://img.shields.io/badge/version-0.1.0-2563EB">
 </p>
 
 ## 安装方式
@@ -81,6 +82,10 @@
 - 点赞功能通过 OneBot `send_like` 异步调用 QQ 名片点赞接口。
 - 戳一戳回图只在配置允许的群内触发，并且会先查自定义图片目录，再回退到 `resource/` 里的默认素材目录。
 - `/群头衔` 不直接写死权限文案，真正执行时还会额外检查牛牛自己是否是群主。
+
+## 更新日志
+
+版本变更见 [`CHANGELOG.md`](./CHANGELOG.md)；也可在控制台插件商店弹窗的「更新日志」分栏查看。
 
 ## 相关链接
 

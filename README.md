@@ -9,7 +9,7 @@
 <p align="center">
   <img alt="社区插件" src="https://img.shields.io/badge/%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6-4B5563">
   <img alt="示范插件" src="https://img.shields.io/badge/%E7%A4%BA%E8%8C%83%E6%8F%92%E4%BB%B6-4EA94B">
-  <img alt="版本" src="https://img.shields.io/badge/version-0.1.0-2563EB">
+  <img alt="版本" src="https://img.shields.io/badge/%E7%89%88%E6%9C%AC-v0.1.0-2563EB">
 </p>
 
 ## 安装方式

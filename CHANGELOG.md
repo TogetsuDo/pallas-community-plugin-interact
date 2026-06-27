@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-06-27
+- docs(readme): 命令权限表头统一为「默认等级」
+
 ## [0.1.1] - 2026-06-27
 - docs(readme): 「怎么使用」口令统一加行内代码标记
 
@@ -19,5 +22,7 @@
 - 知识源 `interact.faq`：向 LLM 注入名片点赞、群头衔、戳一戳的说明。
 - 插件商店头像、图标与封面资源。
 
-[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/TogetsuDo/pallas-community-plugin-interact/releases/tag/v0.1.0

@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-07-21
+
 ### Fixed
 
 - 修复 `from __future__ import annotations` 下 `Bot`/`T_State` 仅 TYPE_CHECKING 导入导致 NoneBot DI 解析失败的启动告警。
@@ -26,7 +28,8 @@
 - 知识源 `interact.faq`：向 LLM 注入名片点赞、群头衔、戳一戳的说明。
 - 插件商店头像、图标与封面资源。
 
-[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/TogetsuDo/pallas-community-plugin-interact/releases/tag/v0.1.0

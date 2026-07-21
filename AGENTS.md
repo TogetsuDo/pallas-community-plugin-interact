@@ -29,6 +29,6 @@ interact/
 - 命令权限走 [cmd_perm](https://github.com/PallasBot/Pallas-Bot/blob/dev/docs/common/cmd_perm/README.md) 的 `command_permissions`；`usage` 不写死权限角色，帮助图自动展示「何人可用」。
 - 在本体仓校验：`uv run python tools/community_plugin_author.py check <本仓路径> --profile L1`。
 - **版本与更新日志**：遵循[语义化版本](https://semver.org/lang/zh-CN/)；维护 `CHANGELOG.md`（[Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)），日常改动记入 `## [Unreleased]`，发布时归档到 `## [X.Y.Z]` 并打 `vX.Y.Z` git tag；同步 `community-index.entry.json` 的 `version`。
-- 改 `community-index.entry.json` 后，记得在 [community-plugin-index](https://github.com/PallasBot/community-plugin-index) 同步条目。
+- 改 `community-index.entry.json` 后，记得在 [community-plugin-index](https://github.com/PallasBot/community-plugin-index) 同步条目（见 [发版后同步索引](https://github.com/PallasBot/Pallas-Bot/blob/dev/docs/guide/community-plugin-author.md#步骤-6发版后同步索引)）。
 
 详见 [社区插件开发者指南](https://github.com/PallasBot/Pallas-Bot/blob/dev/docs/guide/community-plugin-author.md)。

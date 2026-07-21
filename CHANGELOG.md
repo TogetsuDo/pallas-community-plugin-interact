@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复 `from __future__ import annotations` 下 `Bot`/`T_State` 仅 TYPE_CHECKING 导入导致 NoneBot DI 解析失败的启动告警。
+
 ## [0.1.2] - 2026-06-27
 - docs(readme): 命令权限表头统一为「默认等级」
 

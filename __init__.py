@@ -6,6 +6,7 @@ from pallas.api.commands import (
     command_perm_row,
     message_command,
 )
+from pallas.api.platform import llm_command_tool_row
 from pallas.api.metadata import (
     PLUGIN_EXTRA_VERSION,
     PLUGIN_HOMEPAGE,
@@ -41,6 +42,15 @@ __plugin_meta__ = PluginMetadata(
             command_perm_row(f"{PLUGIN_ID}.praise", "牛牛赞我", "everyone"),
             command_perm_row(f"{PLUGIN_ID}.set_title", "/群头衔", "group_moderator"),
         ),
+        "llm_tools": [
+            llm_command_tool_row(
+                name="interact.praise",
+                command_id=f"{PLUGIN_ID}.praise",
+                description="给发送者名片点赞。用户说赞我、点赞时使用。",
+                parameters={"type": "object", "properties": {}},
+                command_template="牛牛赞我",
+            ),
+        ],
         "menu_data": [
             {
                 "func": "名片点赞",

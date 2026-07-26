@@ -49,6 +49,7 @@ __plugin_meta__ = PluginMetadata(
                 description="给发送者名片点赞。用户说赞我、点赞时使用。",
                 parameters={"type": "object", "properties": {}},
                 command_template="牛牛赞我",
+                hints=["赞我", "点赞", "给我点赞", "名片点赞"],
             ),
         ],
         "menu_data": [

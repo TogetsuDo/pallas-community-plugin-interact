@@ -8,6 +8,8 @@ from nonebot import logger
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, PokeNotifyEvent
 from nonebot.exception import ActionFailed
 
+from pallas.api.logging import format_plugin_event
+
 from .config import get_config
 from .service import poke_image_candidates, schedule_user_likes
 
@@ -49,6 +51,12 @@ async def handle_poke_reply(bot: Bot, event: PokeNotifyEvent) -> None:
     img = choice(image_files)
     try:
         await bot.send(event, MessageSegment.image(f"file://{img.absolute()}"))
+        logger.info(
+            format_plugin_event(
+                "poke_reply",
+                f"Bot [{bot.self_id}] replied a poke image in group [{group_id}]",
+            )
+        )
         return
     except Exception as e:
         logger.debug("poke image file:// failed: {}", e)
@@ -56,6 +64,12 @@ async def handle_poke_reply(bot: Bot, event: PokeNotifyEvent) -> None:
     try:
         image_bytes = await asyncio.to_thread(img.read_bytes)
         await bot.send(event, MessageSegment.image(image_bytes))
+        logger.info(
+            format_plugin_event(
+                "poke_reply",
+                f"Bot [{bot.self_id}] replied a poke image in group [{group_id}]",
+            )
+        )
     except Exception as e:
         logger.debug("poke image bytes failed: {}", e)
         await bot.send(event, "图片发送失败")
@@ -124,4 +138,11 @@ async def handle_set_special_title(ctx: PluginHandlerContext) -> None:
         logger.error("处理设置群头衔消息时发生错误: {}", e)
         await ctx.finish("设置群头衔时发生异常，请稍后重试")
     else:
+        logger.info(
+            format_plugin_event(
+                "set_special_title",
+                f"Bot [{ctx.bot.self_id}] set the group special title of user [{target_user_id}] "
+                f"in group [{event.group_id}]",
+            )
+        )
         await ctx.finish(MessageSegment.at(target_user_id) + f" 头衔已设置为：{special_title}")

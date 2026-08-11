@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from nonebot import logger
 from nonebot.exception import ActionFailed
 
+from pallas.api.logging import format_plugin_event
 from pallas.api.paths import plugin_data_dir, resource_dir
 
 from .config import get_config
@@ -55,6 +56,12 @@ def poke_image_candidates() -> list[Path]:
 async def send_user_likes(bot: Bot, user_id: int, *, times: int) -> None:
     try:
         await bot.call_api("send_like", user_id=user_id, times=times)
+        logger.info(
+            format_plugin_event(
+                "send_like",
+                f"Bot [{bot.self_id}] liked user [{user_id}] {times} times",
+            )
+        )
     except ActionFailed as e:
         detail = str(e)
         if "点赞" in detail and "上限" in detail:

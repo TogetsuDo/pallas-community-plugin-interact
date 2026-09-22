@@ -7,7 +7,6 @@ from pallas.api.commands import (
     message_command,
 )
 from pallas.api.metadata import (
-    PLUGIN_EXTRA_VERSION,
     PLUGIN_HOMEPAGE,
     PLUGIN_MENU_TEMPLATE,
     SCENE_AUTO,
@@ -37,7 +36,7 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"~onebot.v11"},
     extra={
         "help_tag": "chat",
-        "version": PLUGIN_EXTRA_VERSION,
+        "version": "0.1.8",
         "menu_template": PLUGIN_MENU_TEMPLATE,
         "command_permissions": command_perm_list(
             command_perm_row(f"{PLUGIN_ID}.praise", "牛牛赞我", "everyone"),

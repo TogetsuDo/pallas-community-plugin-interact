@@ -20,6 +20,33 @@ class Config(BaseModel, extra="ignore"):
         description="插件图片目录为空时，尝试 resource/ 下该相对路径；留空则不回退。",
     )
     enable_special_title: bool = Field(default=True, description="是否启用 /群头衔 设置专属头衔。")
+    enable_spam_moderation: bool = Field(
+        default=False, description="是否启用刷屏管理；仅当牛牛为群管理员或群主时生效。"
+    )
+    spam_message_threshold: int = Field(
+        default=4,
+        ge=2,
+        le=100,
+        description="同一成员在刷屏时间窗内发送多少条消息后触发随机禁言。",
+    )
+    spam_window_sec: int = Field(
+        default=5,
+        ge=1,
+        le=60,
+        description="刷屏判定时间窗，单位为秒。",
+    )
+    spam_mute_min_sec: int = Field(
+        default=10,
+        ge=1,
+        le=3600,
+        description="随机禁言时长下限，单位为秒。",
+    )
+    spam_mute_max_sec: int = Field(
+        default=60,
+        ge=1,
+        le=3600,
+        description="随机禁言时长上限，单位为秒。",
+    )
 
 
 plugin_webui = install_hot_reload_config(Config, config_module=__name__)

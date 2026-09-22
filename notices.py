@@ -8,7 +8,7 @@ from nonebot.rule import Rule
 
 from pallas.api.perm import group_message_permission_for_command
 
-from .handlers import handle_poke_reply, handle_set_special_title
+from .handlers import handle_poke_reply, handle_set_special_title, handle_spam_moderation
 
 
 def poke_target_is_self(event: PokeNotifyEvent) -> bool:
@@ -21,6 +21,15 @@ poke = on_notice(rule=Rule(poke_target_is_self), priority=100, block=False)
 @poke.handle()
 async def on_poke(bot: Bot, event: PokeNotifyEvent) -> None:
     await handle_poke_reply(bot, event)
+
+
+spam_moderation = on_message(priority=1, block=False)
+
+
+@spam_moderation.handle()
+async def on_spam_moderation(bot: Bot, event: Event) -> None:
+    if isinstance(event, GroupMessageEvent):
+        await handle_spam_moderation(bot, event)
 
 
 async def is_set_special_title_msg(event: Event) -> bool:

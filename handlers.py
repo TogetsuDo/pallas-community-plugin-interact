@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
-from random import choice
+from collections import deque
+from random import choice, randint
+from time import monotonic
 from typing import TYPE_CHECKING
 
 from nonebot import logger
@@ -9,14 +11,20 @@ from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, PokeN
 from nonebot.exception import ActionFailed
 
 from pallas.api.logging import format_plugin_event
+from pallas.api.platform import resolve_group_admin_capability
 
 from .config import get_config
 from .service import poke_image_candidates, schedule_user_likes
+from .spam import record_spam_message
 
 if TYPE_CHECKING:
     from nonebot.adapters import Bot
 
     from pallas.api.commands import PluginHandlerContext
+
+
+_spam_windows: dict[tuple[int, int, int], deque[float]] = {}
+_spam_mute_inflight: set[tuple[int, int, int]] = set()
 
 
 async def handle_praise(ctx: PluginHandlerContext) -> None:
@@ -27,6 +35,75 @@ async def handle_praise(ctx: PluginHandlerContext) -> None:
     if not isinstance(user_id, int) or user_id <= 0:
         return
     schedule_user_likes(ctx.bot, user_id, times=cfg.like_times)
+
+
+async def handle_spam_moderation(bot: Bot, event: GroupMessageEvent) -> None:
+    cfg = get_config()
+    if not cfg.enable_spam_moderation:
+        return
+
+    bot_id = int(bot.self_id)
+    group_id = int(event.group_id)
+    user_id = int(event.user_id)
+    if user_id == bot_id:
+        return
+
+    key = (bot_id, group_id, user_id)
+    if key in _spam_mute_inflight:
+        return
+    try:
+        if await resolve_group_admin_capability(group_id, bot_id, bot=bot) is not True:
+            return
+    except Exception as e:
+        logger.debug("spam moderation bot role check failed group_id={} bot_id={}: {}", group_id, bot_id, e)
+        return
+
+    timestamps = _spam_windows.setdefault(key, deque())
+    if not record_spam_message(
+        timestamps,
+        now=monotonic(),
+        threshold=cfg.spam_message_threshold,
+        window_sec=cfg.spam_window_sec,
+    ):
+        return
+
+    _spam_windows.pop(key, None)
+    _spam_mute_inflight.add(key)
+    try:
+        await mute_spammer(bot, group_id, user_id, cfg)
+    finally:
+        _spam_mute_inflight.discard(key)
+
+
+async def mute_spammer(bot: Bot, group_id: int, user_id: int, cfg) -> None:
+    try:
+        target_info = await bot.call_api(
+            "get_group_member_info",
+            group_id=group_id,
+            user_id=user_id,
+            no_cache=True,
+        )
+        if not isinstance(target_info, dict) or target_info.get("role") != "member":
+            return
+
+        min_sec, max_sec = sorted((cfg.spam_mute_min_sec, cfg.spam_mute_max_sec))
+        duration = randint(min_sec, max_sec)
+        await bot.call_api(
+            "set_group_ban",
+            group_id=group_id,
+            user_id=user_id,
+            duration=duration,
+        )
+    except Exception as e:
+        logger.warning("spam moderation failed in group [{}] for user [{}]: {}", group_id, user_id, e)
+        return
+
+    logger.info(
+        format_plugin_event(
+            "spam_moderation",
+            f"Bot [{bot.self_id}] muted spammer [{user_id}] in group [{group_id}] for [{duration}s]",
+        )
+    )
 
 
 async def handle_poke_reply(bot: Bot, event: PokeNotifyEvent) -> None:
@@ -83,11 +160,7 @@ async def handle_set_special_title(ctx: PluginHandlerContext) -> None:
     if not isinstance(event, GroupMessageEvent):
         return
 
-    at_list = [
-        seg.data["qq"]
-        for seg in event.message
-        if seg.type == "at" and seg.data.get("qq") != "all"
-    ]
+    at_list = [seg.data["qq"] for seg in event.message if seg.type == "at" and seg.data.get("qq") != "all"]
     target_user_id = event.user_id
     if at_list:
         try:

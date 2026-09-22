@@ -6,7 +6,6 @@ from pallas.api.commands import (
     command_perm_row,
     message_command,
 )
-from pallas.api.platform import llm_command_tool_row
 from pallas.api.metadata import (
     PLUGIN_EXTRA_VERSION,
     PLUGIN_HOMEPAGE,
@@ -18,6 +17,7 @@ from pallas.api.metadata import (
     knowledge_source_row,
     usage_line,
 )
+from pallas.api.platform import llm_command_tool_row
 
 from . import notices as _notices  # noqa: F401
 from .handlers import handle_praise
@@ -26,10 +26,11 @@ PLUGIN_ID = "interact"
 
 __plugin_meta__ = PluginMetadata(
     name="牛牛互动",
-    description="名片点赞、戳一戳回图与群主设置专属头衔。",
+    description="名片点赞、戳一戳回图、群主头衔与刷屏管理。",
     usage=join_usage(
         usage_line("牛牛赞我 / 赞我 / 牛牛点赞", "给发送者名片点赞"),
         usage_line("/群头衔@成员 头衔", "群主牛牛设置专属头衔"),
+        usage_line("刷屏管理（需在配置中开启）", "随机禁言刷屏成员"),
     ),
     type="application",
     homepage=PLUGIN_HOMEPAGE,
@@ -79,18 +80,25 @@ __plugin_meta__ = PluginMetadata(
                 "brief_des": "随机回复图片",
                 "detail_des": "需在插件配置中启用并填写群号；图片放 `data/interact/poke_images/`。",
             },
+            {
+                "func": "刷屏管理",
+                "trigger_method": "on_message",
+                "trigger_scene": SCENE_GROUP,
+                "trigger_condition": "群成员短时间连续发送多条消息",
+                "brief_des": "随机禁言刷屏成员",
+                "detail_des": "需在插件配置中开启；仅当牛牛为群管理员或群主且目标为普通成员时生效。",
+            },
         ],
         "knowledge_sources": [
             knowledge_source_row(
                 source_id="interact.faq",
                 title="牛牛互动说明",
-                description="名片点赞、戳一戳与群头衔",
+                description="名片点赞、戳一戳、群头衔与刷屏管理",
                 chunks=[
                     {
                         "title": "名片点赞",
                         "content": (
-                            "发送「牛牛赞我」「赞我」或「牛牛点赞」"
-                            "可为发送者 QQ 名片点赞；须牛牛与发送者为好友。"
+                            "发送「牛牛赞我」「赞我」或「牛牛点赞」可为发送者 QQ 名片点赞；须牛牛与发送者为好友。"
                         ),
                         "keywords": "赞我,点赞,名片,牛牛赞我",
                     },
@@ -109,6 +117,14 @@ __plugin_meta__ = PluginMetadata(
                             "需在插件配置中启用并填写群号，图片目录为 data/interact/poke_images/。"
                         ),
                         "keywords": "戳一戳,回图,戳牛牛,图片",
+                    },
+                    {
+                        "title": "刷屏管理",
+                        "content": (
+                            "在插件配置中开启刷屏管理后，同一成员在时间窗内连续发送达到阈值的消息时，"
+                            "如果牛牛是群管理员或群主，会对普通成员随机禁言；禁言时长取配置的上下限之间的随机值。"
+                        ),
+                        "keywords": "刷屏,禁言,群管理,随机禁言",
                     },
                 ],
             ),

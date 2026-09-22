@@ -2,6 +2,16 @@
 
 本文件记录牛牛互动 interact 的版本变更，格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### Added
+
+- 新增可配置的刷屏管理：达到消息阈值后，对普通成员随机禁言。
+
+### Changed
+
+- 刷屏管理默认改为 5 秒内达到 4 条消息后触发。
+
 ## [0.1.7] - 2026-08-11
 
 - feat(logging): 补充点赞、戳一戳回图与群头衔设置业务事件日志

@@ -1,7 +1,7 @@
 {
   "id": "interact",
   "name": "牛牛互动",
-  "description": "名片点赞、戳一戳回图与群主设置专属头衔。社区插件开发示范。",
+  "description": "名片点赞、戳一戳回图、群主头衔与刷屏管理。社区插件开发示范。",
   "repository": "https://github.com/TogetsuDo/pallas-community-plugin-interact.git",
   "ref": "main",
   "version": "0.1.7",

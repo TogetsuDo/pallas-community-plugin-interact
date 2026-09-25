@@ -6,7 +6,7 @@ from random import choice, randint
 from time import monotonic
 from typing import TYPE_CHECKING
 
-from nonebot import logger
+from nonebot import get_bots, logger
 from nonebot.adapters.onebot.v11 import GroupMessageEvent, MessageSegment, PokeNotifyEvent
 from nonebot.exception import ActionFailed
 
@@ -15,7 +15,7 @@ from pallas.api.platform import resolve_group_admin_capability
 
 from .config import get_config
 from .service import poke_image_candidates, schedule_user_likes
-from .spam import record_spam_message
+from .spam import record_spam_message, remember_message
 
 if TYPE_CHECKING:
     from nonebot.adapters import Bot
@@ -23,8 +23,11 @@ if TYPE_CHECKING:
     from pallas.api.commands import PluginHandlerContext
 
 
-_spam_windows: dict[tuple[int, int, int], deque[float]] = {}
-_spam_mute_inflight: set[tuple[int, int, int]] = set()
+_spam_windows: dict[tuple[int, int], deque[float]] = {}
+_spam_seen_messages: dict[tuple[int, int], float] = {}
+_spam_mute_pending: set[tuple[int, int]] = set()
+_spam_mute_inflight: set[tuple[int, int]] = set()
+_SPAM_MESSAGE_DEDUPE_SEC = 60.0
 
 
 async def handle_praise(ctx: PluginHandlerContext) -> None:
@@ -48,31 +51,64 @@ async def handle_spam_moderation(bot: Bot, event: GroupMessageEvent) -> None:
     if user_id == bot_id:
         return
 
-    key = (bot_id, group_id, user_id)
+    key = (group_id, user_id)
     if key in _spam_mute_inflight:
         return
+
     try:
-        if await resolve_group_admin_capability(group_id, bot_id, bot=bot) is not True:
-            return
-    except Exception as e:
-        logger.debug("spam moderation bot role check failed group_id={} bot_id={}: {}", group_id, bot_id, e)
-        return
-
-    timestamps = _spam_windows.setdefault(key, deque())
-    if not record_spam_message(
-        timestamps,
-        now=monotonic(),
-        threshold=cfg.spam_message_threshold,
-        window_sec=cfg.spam_window_sec,
+        message_id = int(getattr(event, "message_id", 0))
+    except (TypeError, ValueError):
+        message_id = 0
+    arrival_time = monotonic()
+    if message_id and remember_message(
+        _spam_seen_messages,
+        (group_id, message_id),
+        now=arrival_time,
+        ttl_sec=_SPAM_MESSAGE_DEDUPE_SEC,
     ):
-        return
+        try:
+            event_time = float(getattr(event, "time", 0))
+        except (TypeError, ValueError):
+            event_time = arrival_time
+        if event_time <= 0:
+            event_time = arrival_time
+        timestamps = _spam_windows.setdefault(key, deque())
+        if record_spam_message(
+            timestamps,
+            now=event_time,
+            threshold=cfg.spam_message_threshold,
+            window_sec=cfg.spam_window_sec,
+        ):
+            _spam_windows.pop(key, None)
+            _spam_mute_pending.add(key)
 
-    _spam_windows.pop(key, None)
+    if key not in _spam_mute_pending:
+        return
     _spam_mute_inflight.add(key)
     try:
-        await mute_spammer(bot, group_id, user_id, cfg)
+        moderation_bot = await find_spam_moderation_bot(bot, group_id)
+        if moderation_bot is None:
+            return
+        await mute_spammer(moderation_bot, group_id, user_id, cfg)
+        _spam_mute_pending.discard(key)
     finally:
         _spam_mute_inflight.discard(key)
+
+
+async def find_spam_moderation_bot(bot: Bot, group_id: int) -> Bot | None:
+    candidates = {str(bot.self_id): bot}
+    candidates.update(get_bots())
+    for candidate in candidates.values():
+        try:
+            candidate_id = int(candidate.self_id)
+        except (AttributeError, TypeError, ValueError):
+            continue
+        try:
+            if await resolve_group_admin_capability(group_id, candidate_id, bot=candidate) is True:
+                return candidate
+        except Exception as e:
+            logger.debug("spam moderation bot role check failed group_id={} bot_id={}: {}", group_id, candidate_id, e)
+    return None
 
 
 async def mute_spammer(bot: Bot, group_id: int, user_id: int, cfg) -> None:

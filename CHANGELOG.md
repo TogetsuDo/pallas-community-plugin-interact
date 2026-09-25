@@ -2,6 +2,13 @@
 
 本文件记录牛牛互动 interact 的版本变更，格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.9] - 2026-09-25
+
+### Fixed
+
+- 修复多个牛牛同时在线时刷屏消息分散接收导致的漏判。
+- 修复同一条消息被多个牛牛转发时可能重复计数的问题。
+
 ## [0.1.8] - 2026-09-23
 
 ### Added
@@ -56,8 +63,9 @@
 - 知识源 `interact.faq`：向 LLM 注入名片点赞、群头衔、戳一戳的说明。
 - 插件商店头像、图标与封面资源。
 
+[0.1.9]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.7...v0.1.8
-[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.8...HEAD
+[Unreleased]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.9...HEAD
 [0.1.4]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/TogetsuDo/pallas-community-plugin-interact/compare/v0.1.1...v0.1.2

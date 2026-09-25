@@ -36,7 +36,7 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={"~onebot.v11"},
     extra={
         "help_tag": "chat",
-        "version": "0.1.8",
+        "version": "0.1.9",
         "menu_template": PLUGIN_MENU_TEMPLATE,
         "command_permissions": command_perm_list(
             command_perm_row(f"{PLUGIN_ID}.praise", "牛牛赞我", "everyone"),
